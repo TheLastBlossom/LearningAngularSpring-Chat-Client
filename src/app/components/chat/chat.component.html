@@ -1,0 +1,48 @@
+<div class="card my-3 mx-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-pills card-header-pills">
+                    <div class="row g-2">
+                        <div class="col-9" *ngIf="!connection">
+                            <li class="nav-item">
+                                <input type="text" [(ngModel)]="message.username" class="form-control"
+                                    placeholder="Type your username...">
+                            </li>
+                        </div>
+                        <div class="col-3" *ngIf="!connection">
+                            <li class="nav-item">
+                                <button class="btn btn-success" (click)="connect()" type="button" [disabled]="!message.username">Connect</button>
+                            </li>
+                        </div>
+                        <div class="col" *ngIf="connection">
+                            <li class="nav-item">
+                                <button class="btn btn-warning" (click)="disconnect()" type="button">Disconnect</button>
+                            </li>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connection">
+        <ul class="list-group list-group-flush`">
+            <li class="list-group-item list-group-item-light" *ngFor="let message of messages">
+                <span *ngIf="message.type=='NEW_USER'">{{message.date | date:'shortTime'}} : The user @<span [ngStyle]="{'color': message.color}">{{message.text}}</span> has entered the room!!!</span>
+                <span *ngIf="message.type=='MESSAGE'">{{message.date | date:'shortTime'}} : @<span [ngStyle]="{'color': message.color}">{{message.username}}</span> typed: {{message.text}}</span>            
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer" *ngIf="connection">
+        <form class="row g-2 align-items-center">
+            <div class="col-9">
+                <input type="text" class="form-control" placeholder="Type a message..." name="text"
+                    [(ngModel)]="message.text" (keyup)="iAmTyping()">
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary" (click)="submitMessage()" type="submit">Submit</button>
+            </div>
+        </form>
+        <div>{{typing}}</div>
+    </div>
+</div>
